@@ -1,10 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Webpack Template</title>
+  <title>To Do List</title>
 </head>
+
 <body>
-  <h1>Hello Webpack 👋</h1>
+  <div class="header"> TO-DO LIST </div>
+
+  <div class="sidebar">
+    <nav>
+      <button class="inbox-btn"><span>Inbox</span></button>
+      <button class="today-btn"><span>Today</span></button>
+      <button class="week-btn"><span>Week</span></button>
+      <button class="complete-btn"><span>Complete</span></button>
+    </nav>
+
+    <div class="project-section">
+      <h2 class="project-title"><span>My Projects</span></h2>
+      <ul>
+        <li>Project1</li>
+        <li>Project2</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="main-container">
+    <h2 class="title"><span>My tasks</span> <button>Add Task</button></h2>
+    <ul class="list">
+      <li class="list-group">Task 1 </li>
+      <li class="list-group">Task 2 </li>
+      <li class="list-group">Task 3 </li>
+      <li class="list-group">Task 4 </li>
+
+    </ul>
+  </div>
+
+  <dialog class="modal add-task" open>
+    <h2>Add task</h2>
+    <form method="dialog">
+
+      <div class="form-group">
+        <input type="text" id="title" placeholder="Title">
+      </div>
+
+      <div class="form-group">
+        <textarea name="comment" id="description" rows="6" cols="30" placeholder="Description"></textarea>
+        <div class="form-group">
+
+          <label for="due-date">Due Date</label>
+          <input type="date" id="due-date">
+        </div>
+        <div class="form-group">
+
+          <label for="">Priority</label>
+          <select name="priority" id="priority">
+            <option value="low">Low</option>
+            <option value="meidum">Meidum</option>
+            <option value="high">High</option>
+          </select>
+          <div class="form-group">
+
+            <label for="">Projects</label>
+            <select name="project" id="project">
+              <option value="default">Default</option>
+            </select>
+          </div>
+
+         <div class="button-group">
+          <button>Cancel</button>
+          <button>Add</button>
+         </div>
+    </form>
+  </dialog>
 </body>
+
 </html>
