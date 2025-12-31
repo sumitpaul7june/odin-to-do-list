@@ -1,150 +1,175 @@
 import TaskManager from "./taskManager";
-import {createTaskElement} from "./taskRenderer";
+import { createTaskElement } from "./taskRenderer";
+import { viewConfig } from "./viewConfig";
+import modalController from "./modalController";
+import navController from "./navController";
+import ProjectManager from "./projectManager";
 
-const displayController = function () {
-    const dialog = document.querySelector("dialog");
-    const addTaskBtn = document.querySelector(".add-task-btn");
-    const form = document.querySelector("form");
-    const list = document.querySelector('.list');
-    const modalHeader = dialog.querySelector('.modal-header');
-    const submitBtn = form.querySelector('.add-modal-btn');
+const displayController = function ()
+{
+  const addTaskBtn = document.querySelector(".add-task-btn");
+  const list = document.querySelector(".list");
+  const projectList = document.querySelector(".project-list");
+  const mainContainerTitle = document.querySelector(".main-container span");
+  const navItems = document.querySelectorAll("nav div");
 
-    // Form inputs
-    const titleInput = form.querySelector('#title');
-    const descriptionInput = form.querySelector('#description');
-    const dueDateInput = form.querySelector('#due-date');
-    const priorityInput = form.querySelector('#priority');
-    const projectInput = form.querySelector('#project');
+  const state =
+  {
+    currentView: "inbox",
+    currentProject: null
+  };
 
-    let editingTaskId = null;
+  /* HELPER FUNCTIONS FOR UI */
 
+  function clearSidebarSelection()
+  {
+    navItems.forEach(div => div.classList.remove("active"));
+    projectList.querySelectorAll("li").forEach(li => li.classList.remove("active"));
+  }
 
-    function openAddModal()
+  function updateActiveNav(view)
+  {
+    clearSidebarSelection();
+    const activeNav = document.querySelector(`nav .${view}`);
+    if (activeNav) activeNav.classList.add("active");
+  }
+
+  function updateActiveProject(projectItem)
+  {
+    clearSidebarSelection();
+    projectItem.classList.add("active");
+  }
+
+  /* EVENT HANDLERS */
+
+  addTaskBtn.addEventListener("click", () =>
+  {
+    modalController.openAddTaskModal(state.currentProject);
+  });
+
+  projectList.addEventListener("click", (e) =>
+  {
+    const projectItem = e.target.closest("li");
+    if (!projectItem) return;
+
+    state.currentProject = projectItem.dataset.id;
+
+    updateActiveProject(projectItem);
+    mainContainerTitle.textContent = projectItem.textContent;
+
+    renderCurrentView();
+  });
+
+  list.addEventListener("click", (e) =>
+  {
+    const taskItem = e.target.closest("li");
+    if (!taskItem) return;
+
+    const id = taskItem.dataset.id;
+
+    if (e.target.closest(".delete-task-btn"))
     {
-        editingTaskId = null;
-        form.reset();
-        modalHeader.textContent = 'Add Task';
-        submitBtn.textContent = 'Add';
-        dialog.showModal();
+      TaskManager.deleteTask(id);
+      renderCurrentView();
+      return;
     }
 
-    function openEditModal(id)
+    if (e.target.closest(".task-checkbox"))
     {
-        editingTaskId = id;
-        const currentTask = TaskManager.getTaskInfo(id);
-        if (!currentTask) return;
-
-        modalHeader.textContent = 'Edit Task';
-        submitBtn.textContent = 'Update';
-
-        titleInput.value = currentTask.title;
-        descriptionInput.value = currentTask.description;
-        dueDateInput.value = currentTask.dueDate;
-        priorityInput.value = currentTask.priority;
-        projectInput.value = currentTask.project.toLowerCase();
-        dialog.showModal();
+      TaskManager.toggleTaskCompleted(id);
+      renderCurrentView();
+      return;
     }
 
-
-    function closeModal() 
+    if (e.target.closest(".edit-task-btn"))
     {
-        editingTaskId = null;
-        dialog.close();
-        form.reset();
+      modalController.openEditTaskModal(id);
+      return;
     }
 
-    
-    
-    
-    
+    modalController.openTaskInfoModal(id);
+  });
 
-    // Add Task 
-    addTaskBtn.addEventListener("click", openAddModal);
+  /* NAVIGATION */
 
-    list.addEventListener('click', (e) => {
-        const currentList = e.target.closest('li');
-        if (!currentList) return;
+  navController.setOnViewChange((view) =>
+  {
+    state.currentView = view;
+    state.currentProject = null;
 
-        const id = currentList.dataset.id;
+    updateActiveNav(view);
+    mainContainerTitle.textContent = viewConfig[view].title;
 
-        // Delete a task
-        if (e.target.closest('.delete-task-btn')) 
-        {
-            TaskManager.deleteTask(id);
-            renderTasks();
-            return;
-        }
+    renderCurrentView();
+  });
 
-        // Completing a task
-        if (e.target.closest('.task-checkbox')) 
-        {
-            TaskManager.toggleTaskCompleted(id);
-            renderTasks();
-            return;
-        }
+  /* RENDERING */
 
-        // Editing a task
-        if (e.target.closest('.edit-task-btn')) 
-        {
-            openEditModal(id);
-            return;
-        }
+  function renderProjects()
+  {
+    projectList.innerHTML = "";
+
+    const projects = ProjectManager.getAllProjects();
+    projects.forEach(project =>
+    {
+      const li = document.createElement("li");
+      li.textContent = project.title;
+      li.dataset.id = project.id;
+      projectList.append(li);
     });
+  }
 
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
+  function renderCurrentView()
+  {
+    renderView(state.currentView);
+  }
 
-        const title = titleInput.value.trim();
-        const description = descriptionInput.value.trim();
-        const dueDate = dueDateInput.value;
-        const priority = priorityInput.value;
-        const project = projectInput.value;
+  function renderView(view)
+  {
+    let tasks = TaskManager.getAllTasks();
+    const filterFn = viewConfig[view]?.filter;
+    if (!filterFn) return;
 
-        if (!title || !dueDate || !project) return;
+    tasks = tasks.filter(filterFn);
 
-        const updatedValues = 
-        {
-            title,
-            description,
-            dueDate,
-            priority,
-            project
-        };
-
-        if (editingTaskId) 
-        {
-            TaskManager.updateTask(editingTaskId, updatedValues);
-            editingTaskId = null;
-        } 
-        else 
-        {
-            TaskManager.addTask(title, description, dueDate, priority, project);
-        }
-
-        renderTasks();
-        closeModal();
-    });
-
-    
-    form.addEventListener("click", (e) => {
-        if (e.target.classList.contains("cancel-modal-btn")) 
-        {
-            closeModal();
-        }
-    });
-
-    function renderTasks() {
-        const tasks = TaskManager.getAllTasks();
-        list.innerHTML = '';
-
-        tasks.forEach(task => 
-        {
-            const taskElement = createTaskElement(task);
-            list.append(taskElement);
-        });
+    if (state.currentProject)
+    {
+      tasks = tasks.filter(task => task.projectId === state.currentProject);
     }
 
-    renderTasks();
+    list.innerHTML = "";
+    tasks.forEach(task =>
+    {
+      list.append(createTaskElement(task));
+    });
+  }
+
+  /* INITIAL DATA */
+
+  function addInitialTaskIfNeeded()
+  {
+    const tasks = TaskManager.getAllTasks();
+    if (tasks.length > 0) return;
+
+    const projects = ProjectManager.getAllProjects();
+    if (!projects.length) return;
+
+    TaskManager.addTask(
+      "Welcome Task",
+      "This is your first task 🎉",
+      "2025-01-15",
+      "medium",
+      projects[0].id
+    );
+  }
+
+  modalController.setOnTaskChange(renderCurrentView);
+  modalController.setOnProjectChange(renderProjects);
+
+  renderProjects();
+  addInitialTaskIfNeeded();
+  updateActiveNav("inbox");
+  renderCurrentView();
 };
 
 export default displayController;

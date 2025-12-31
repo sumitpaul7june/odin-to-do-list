@@ -1,37 +1,55 @@
-import {format, parseISO} from 'date-fns';
+import
+{
+    format,
+    parseISO
+}
+from "date-fns";
 
-function createTaskElement(task) {
-    const li = document.createElement('li');
-    li.classList.add('list-group');
+/* TASK ELEMENT */
+
+function createTaskElement(task)
+{
+    const li = document.createElement("li");
+    li.classList.add("list-group");
     li.dataset.id = task.id;
 
     const taskInfo = createTaskInfo(task);
 
-    const taskDueDate = document.createElement('div');
-    taskDueDate.classList.add('task-due-date');
+    const taskDueDate = document.createElement("div");
+    taskDueDate.classList.add("task-due-date");
     taskDueDate.textContent = formatDate(task.dueDate);
+
+    const taskPriority = document.createElement("span");
+    taskPriority.classList.add("task-priority", task.priority);
+    taskPriority.textContent = task.priority;
 
     const taskActions = createTaskActions();
 
-    li.append(taskInfo, taskDueDate, taskActions);
+    li.append(taskInfo, taskDueDate, taskPriority, taskActions);
     return li;
 }
 
-function createTaskInfo(task) {
-    const taskInfo = document.createElement('div');
-    taskInfo.classList.add('task-info');
+/* TASK INFO (CHECKBOX + TITLE) */
 
-    const taskCheckbox = document.createElement('button');
-    taskCheckbox.classList.add('task-checkbox');
+function createTaskInfo(task)
+{
+    const taskInfo = document.createElement("div");
+    taskInfo.classList.add("task-info");
 
-    const taskTitle = document.createElement('p');
+    const taskCheckbox = document.createElement("button");
+    taskCheckbox.classList.add("task-checkbox");
+
+    const taskTitle = document.createElement("p");
     taskTitle.textContent = task.title;
 
-    if (task.completed) {
-        taskCheckbox.classList.add('checked');
+    if (task.completed)
+    {
+        taskCheckbox.classList.add("checked");
         taskTitle.style.textDecoration = "line-through";
-    } else {
-        taskCheckbox.classList.remove('checked');
+    }
+    else
+    {
+        taskCheckbox.classList.remove("checked");
         taskTitle.style.textDecoration = "none";
     }
 
@@ -39,18 +57,21 @@ function createTaskInfo(task) {
     return taskInfo;
 }
 
-function createTaskActions() {
-    const taskActions = document.createElement('div');
-    taskActions.classList.add('task-actions');
+/* TASK ACTION BUTTONS */
 
-    const editTaskBtn = document.createElement('button');
-    const deleteTaskBtn = document.createElement('button');
+function createTaskActions()
+{
+    const taskActions = document.createElement("div");
+    taskActions.classList.add("task-actions");
 
-    editTaskBtn.classList.add('edit-task-btn');
-    deleteTaskBtn.classList.add('delete-task-btn');
+    const editTaskBtn = document.createElement("button");
+    const deleteTaskBtn = document.createElement("button");
 
-    editTaskBtn.type = 'button';
-    deleteTaskBtn.type = 'button';
+    editTaskBtn.classList.add("edit-task-btn");
+    deleteTaskBtn.classList.add("delete-task-btn");
+
+    editTaskBtn.type = "button";
+    deleteTaskBtn.type = "button";
 
     editTaskBtn.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -77,11 +98,17 @@ function createTaskActions() {
     return taskActions;
 }
 
-function formatDate(dateString) {
-    if (!dateString) return '';
+/* DATE FORMATTER */
+
+function formatDate(dateString)
+{
+    if (!dateString) return "";
 
     const date = parseISO(dateString);
-    return format(date, 'dd MMM yyyy');
+    return format(date, "dd MMM yyyy");
 }
 
-export {createTaskElement};
+export
+{
+    createTaskElement
+};

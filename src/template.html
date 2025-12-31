@@ -14,11 +14,11 @@
       <div class="inbox active" ><span>Inbox</span></div>
       <div class="today"><span>Today</span></div>
       <div class="week" ><span>Week</span></div>
-      <div class="complete"><span>Completed</span></div>
+      <div class="completed"><span>Completed</span></div>
     </nav>
 
     <div class="project-section">
-      <h2 class="project-title"><span>My Projects</span></h2>
+      <h2 class="project-title"><span>My Projects</span> <button class="add-project-btn">+</button></h2>
       <ul class="project-list">
         <li>Default</li>
        
@@ -33,6 +33,8 @@
       
     </ul>
   </div>
+
+  <!-- ADD TASK MODAL -->
 
   <dialog class="modal add-task">
     <h2 class="modal-header">Add task</h2>
@@ -64,8 +66,8 @@
 
         <div class="form-group">
           <label for="">Projects</label>
-          <select name="project" id="project">
-            <option value="default">Default</option>
+          <select name="project" id="task-project">
+           
           </select>
         </div>
 
@@ -80,6 +82,50 @@
 
     </form>
   </dialog>
+
+
+
+  <dialog class="modal add-project">
+    <h2 class="modal-header">Add Project</h2>
+  
+    <form method="dialog">
+      <div class="form-group">
+        <input
+          type="text"
+          id="new-project-name"
+          placeholder="Project name"
+          autocomplete="off"
+        />
+      </div>
+  
+      <div class="button-group">
+        <button type="reset" class="cancel-modal-btn">Cancel</button>
+        <button type="submit" class="add-modal-btn">Add</button>
+      </div>
+    </form>
+  </dialog>
+
+
+  <dialog class="modal task-info-modal">
+    <div class="task-info-container">
+      <h2 class="modal-header">Task Details</h2>
+  
+    <div class="task-info-content">
+      <p><strong>Title:</strong> <span id="info-title"></span></p>
+      <p><strong>Description:</strong> <span id="info-description"></span></p>
+      <p><strong>Due Date:</strong> <span id="info-date"></span></p>
+      <p><strong>Priority:</strong> <span id="info-priority"></span></p>
+      <p><strong>Project:</strong> <span id="info-project"></span></p>
+    </div>
+  
+    <div class="button-group">
+      <button class="close-info-btn">Close</button>
+    </div>
+    </div>
+    
+  </dialog>
+  
+  
 
 
 </body>
