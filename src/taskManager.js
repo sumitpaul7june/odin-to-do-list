@@ -1,68 +1,84 @@
-const ProjectManager = (function ()
+
+const TaskManager = (function()
 {
-    const STORAGE_KEY = "todo-projects";
-
-    /* INTERNAL STATE */
-
-    let projects = loadProjects();
-
     /* LOCALE STORAGE */
+    const TASK_KEY = "todo-tasks";
 
-    function loadProjects()
+    let tasks = loadTasks();
+
+    function loadTasks()
     {
-        const stored = localStorage.getItem(STORAGE_KEY);
+        const stored = localStorage.getItem(TASK_KEY);
 
-        if (stored)
+        if(stored)
         {
             return JSON.parse(stored);
         }
 
-        return [
-            {
-                id: crypto.randomUUID(),
-                title: "Default"
-            }
-        ];
+        return [];
     }
 
-    function saveProjects()
+    function saveTasks()
     {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+        localStorage.setItem(TASK_KEY, JSON.stringify(tasks));
     }
 
-    /* PROJECT ACTIONS */
 
-    function addProject(title)
+
+    function addTask(title, description, dueDate, priority, projectId)
     {
-        const project =
+        tasks.push({id: crypto.randomUUID(), title, description, dueDate, priority, projectId, completed: false});
+        saveTasks();
+
+    }
+
+    function deleteTask(id)
+    {
+        const index = tasks.findIndex(task => task.id === id);
+        if(index !== -1)
         {
-            id: crypto.randomUUID(),
-            title
-        };
-
-        projects.push(project);
-        saveProjects();
+                tasks.splice(index, 1);
+        }
+        saveTasks();
     }
 
-    function getAllProjects()
+    
+
+    function toggleTaskCompleted(id)
     {
-        return [...projects];
+        const task = tasks.find(task => task.id === id)
+        if(task)
+        {
+            task.completed = !task.completed;
+        }
+        saveTasks();
     }
 
-    function getInitialProjectId()
+    function getAllTasks()
     {
-        return projects[0].id;
-    }
+        return [...tasks];
+    }  
 
-    function getProjectById(id)
+    function getTaskInfo(id)
     {
-        return projects.find(project => project.id === id) || null;
+        const task = tasks.find(task => task.id === id);
+        return task;
+    }
+    
+    function updateTask(id, updatedValues)
+    {
+        const task = tasks.find(task => task.id === id);
+        if(!task)
+        {
+            return;
+        }
+        Object.assign(task, updatedValues);
+        saveTasks();
     }
 
-    /* PUBLIC API */
 
-    return { addProject, getAllProjects, getInitialProjectId, getProjectById};
+    return {addTask, deleteTask, toggleTaskCompleted, getAllTasks, getTaskInfo, updateTask};
 
 })();
 
-export default ProjectManager;
+export default TaskManager;

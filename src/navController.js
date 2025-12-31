@@ -32,8 +32,7 @@ const navController = (function ()
         }
     });
 
-    return
-    {
+    return{
         getCurrentView,
         setOnViewChange
     };

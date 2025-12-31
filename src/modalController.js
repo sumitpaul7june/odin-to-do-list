@@ -210,8 +210,7 @@ const modalController = (function ()
 
   /* PUBLIC API */
 
-  return
-  {
+  return {
     openAddTaskModal,
     openEditTaskModal,
     setOnTaskChange,

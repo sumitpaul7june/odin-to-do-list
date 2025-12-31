@@ -1,78 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <title>To Do List</title>
 </head>
 
 <body>
-  <div class="header"> TO-DO LIST </div>
 
+  <!-- Header -->
+  <div class="header">
+    TO-DO LIST
+  </div>
+
+  <!-- Sidebar -->
   <div class="sidebar">
+
+    <!-- Navigation -->
     <nav>
-      <div class="inbox active" ><span>Inbox</span></div>
+      <div class="inbox active"><span>Inbox</span></div>
       <div class="today"><span>Today</span></div>
-      <div class="week" ><span>Week</span></div>
+      <div class="week"><span>Week</span></div>
       <div class="completed"><span>Completed</span></div>
     </nav>
 
+    <!-- Projects -->
     <div class="project-section">
-      <h2 class="project-title"><span>My Projects</span> <button class="add-project-btn">+</button></h2>
+      <h2 class="project-title">
+        <span>My Projects</span>
+        <button class="add-project-btn">+</button>
+      </h2>
+
+      <!-- Project list (filled by JS) -->
       <ul class="project-list">
         <li>Default</li>
-       
       </ul>
     </div>
 
   </div>
 
+  <!-- Main content -->
   <div class="main-container">
-    <h2 class="title"><span>My tasks</span> <button type="button" class="add-task-btn">Add Task</button></h2>
-    <ul class="list">
-      
-    </ul>
+    <h2 class="title">
+      <span>My tasks</span>
+      <button type="button" class="add-task-btn">Add Task</button>
+    </h2>
+
+    <!-- Task list -->
+    <ul class="list"></ul>
   </div>
 
-  <!-- ADD TASK MODAL -->
-
+  <!-- Add task modal -->
   <dialog class="modal add-task">
     <h2 class="modal-header">Add task</h2>
+
     <form method="dialog">
       <section class="form-fields">
+
+        <!-- Task title -->
         <div class="form-group">
           <input type="text" id="title" placeholder="Title">
         </div>
 
+        <!-- Task description -->
         <div class="form-group">
-          <textarea name="comment" id="description" rows="6" cols="30" placeholder="Description"></textarea>
+          <textarea id="description" rows="6" placeholder="Description"></textarea>
         </div>
 
+        <!-- Due date -->
         <div class="form-group">
           <label for="due-date">Due Date</label>
           <input type="date" id="due-date">
         </div>
 
+        <!-- Priority -->
         <div class="form-group">
-          <label for="">Priority</label>
-          <select name="priority" id="priority">
+          <label for="priority">Priority</label>
+          <select id="priority">
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
-
         </div>
 
-
+        <!-- Project -->
         <div class="form-group">
-          <label for="">Projects</label>
-          <select name="project" id="task-project">
-           
-          </select>
+          <label for="task-project">Projects</label>
+          <select id="task-project"></select>
         </div>
 
       </section>
 
+      <!-- Form actions -->
       <section class="form-actions">
         <div class="button-group">
           <button type="reset" class="cancel-modal-btn">Cancel</button>
@@ -83,11 +101,10 @@
     </form>
   </dialog>
 
-
-
+  <!-- Add project modal -->
   <dialog class="modal add-project">
     <h2 class="modal-header">Add Project</h2>
-  
+
     <form method="dialog">
       <div class="form-group">
         <input
@@ -97,7 +114,7 @@
           autocomplete="off"
         />
       </div>
-  
+
       <div class="button-group">
         <button type="reset" class="cancel-modal-btn">Cancel</button>
         <button type="submit" class="add-modal-btn">Add</button>
@@ -105,29 +122,26 @@
     </form>
   </dialog>
 
-
+  <!-- Task info modal -->
   <dialog class="modal task-info-modal">
     <div class="task-info-container">
-      <h2 class="modal-header">Task Details</h2>
-  
-    <div class="task-info-content">
-      <p><strong>Title:</strong> <span id="info-title"></span></p>
-      <p><strong>Description:</strong> <span id="info-description"></span></p>
-      <p><strong>Due Date:</strong> <span id="info-date"></span></p>
-      <p><strong>Priority:</strong> <span id="info-priority"></span></p>
-      <p><strong>Project:</strong> <span id="info-project"></span></p>
-    </div>
-  
-    <div class="button-group">
-      <button class="close-info-btn">Close</button>
-    </div>
-    </div>
-    
-  </dialog>
-  
-  
 
+      <h2 class="modal-header">Task Details</h2>
+
+      <div class="task-info-content">
+        <p><strong>Title:</strong> <span id="info-title"></span></p>
+        <p><strong>Description:</strong> <span id="info-description"></span></p>
+        <p><strong>Due Date:</strong> <span id="info-date"></span></p>
+        <p><strong>Priority:</strong> <span id="info-priority"></span></p>
+        <p><strong>Project:</strong> <span id="info-project"></span></p>
+      </div>
+
+      <div class="button-group">
+        <button class="close-info-btn">Close</button>
+      </div>
+
+    </div>
+  </dialog>
 
 </body>
-
 </html>

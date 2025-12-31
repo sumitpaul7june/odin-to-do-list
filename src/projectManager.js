@@ -10,13 +10,23 @@ const ProjectManager = (function()
     {
         const stored = localStorage.getItem(STORAGE_KEY);
 
-        if(stored)
+        if (stored)
         {
-            return JSON.parse(stored); 
+            return JSON.parse(stored);
         }
 
-        return [ {id: crypto.randomUUID(), title : "Default"}];
+        const defaultProject =
+        {
+            id: crypto.randomUUID(),
+            title: "Default"
+        };
+
+        const projects = [ defaultProject ];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+
+        return projects;
     }
+
     
     function saveProjects()
     {
